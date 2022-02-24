@@ -2,12 +2,18 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 type Data = {
-  name: string
-}
-
-export default function handler(
+  msg: string;
+};
+export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  res.status(200).json({ name: 'John Doe' })
+  var resp = { status: 404, msg: "Wrong method" };
+  switch (req.method) {
+    case "GET":
+      break;
+    case "POST":
+      break;
+  }
+  return res.status(resp?.status).json({ msg: resp.msg });
 }
