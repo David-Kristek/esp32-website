@@ -6,6 +6,7 @@ import dbConnect from "../util/mongodb";
 // https://codesandbox.io/s/piffv?file=/src/pages/api/chat.ts
 import * as proccess from "child_process";
 import Box from "../components/Box";
+import LineTempChart from "../components/LineTempChart"; 
 const Home: NextPage = () => {
   const Container = tw.div`
   bg-verydarkgreen
@@ -36,7 +37,7 @@ const Home: NextPage = () => {
             </div>
           </div>
         </header>
-        <div className="grid md:grid-cols-2 gap-x-[5vw] gap-y-10">
+        <div className="grid md:grid-cols-2 gap-x-[5vw] gap-y-14">
           <section>
             <h2 className="text-2xl text-lightgreen font-bold">
               Aktuální hodnoty
@@ -62,8 +63,8 @@ const Home: NextPage = () => {
               <Box value={"Rýma"} /> */}
             </div>
           </section>
-          <section className="row-span-2">
-
+          <section className="col-span-2">
+              <LineTempChart />
           </section>
         </div>
       </main>
