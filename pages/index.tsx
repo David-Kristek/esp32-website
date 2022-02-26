@@ -6,7 +6,8 @@ import dbConnect from "../util/mongodb";
 // https://codesandbox.io/s/piffv?file=/src/pages/api/chat.ts
 import * as proccess from "child_process";
 import Box from "../components/Box";
-import LineTempChart from "../components/LineTempChart"; 
+import LineTempChart from "../components/LineTempChart";
+import { requireAuthentication } from "../util/tokens";
 const Home: NextPage = () => {
   const Container = tw.div`
   bg-verydarkgreen
@@ -56,7 +57,7 @@ const Home: NextPage = () => {
               Vytápěcí režim
             </h2>
             <div className="flex flex-wrap gap-y-5 gap-x-3 mt-12 md:justify-start justify-center">
-              <Box value={"Ráno a večer"} active/>
+              <Box value={"Ráno a večer"} active />
               <Box value={"Celý den"} />
               {/* <Box value={"Pryč"} />
               <Box value={"Úsporný režim"} />
@@ -64,7 +65,7 @@ const Home: NextPage = () => {
             </div>
           </section>
           <section className="col-span-2">
-              <LineTempChart />
+            <LineTempChart />
           </section>
         </div>
       </main>
@@ -73,7 +74,8 @@ const Home: NextPage = () => {
 };
 
 export default Home;
-export async function getServerSideProps() {
+
+export const getServerSideProps = requireAuthentication(async (context : any) => {
   const db = await dbConnect();
   const pythonScript = proccess.spawn("python", [
     "util/python/main.py",
@@ -86,4 +88,4 @@ export async function getServerSideProps() {
   return {
     props: {},
   };
-}
+});

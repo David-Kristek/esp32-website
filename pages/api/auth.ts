@@ -4,6 +4,7 @@ import Chip from "../../models/chip";
 import jwt from "jsonwebtoken";
 import { compare } from "bcryptjs";
 import { authenticateUser, clearUser, userFromRequest } from "../../util/tokens";
+import dbConnect from "../../util/mongodb";
 
 export const validationFailed = { status: 400, msg: "Validation failed" };
 export const authFailed = { status: 401, msg: "Špatné příhlašovací údaje" };
@@ -30,6 +31,7 @@ export default async function handler(
   return res.status(resp?.status).json({ msg: resp.msg });
 }
 const login = async (res: NextApiResponse, body: any, req : NextApiRequest) => {
+  await dbConnect(); 
   if (!body.username || !body.password) return validationFailed;
   const { username, password } = body;
   const chip = await Chip.findOne({ username });

@@ -7,6 +7,8 @@ import Link from "next/link";
 import React, { useState } from "react";
 import axios from "axios";
 import ReactLoading from "react-loading";
+import { noAuthentication } from "../util/tokens";
+import Router from "next/router";
 
 const Login: NextPage = () => {
   const [error, setError] = useState("");
@@ -25,8 +27,8 @@ const Login: NextPage = () => {
         username: username.value,
         password: password.value,
       });
-      console.log(resp.data);
-      // if(resp.data.key)  we are logged hurray
+      console.log(resp.data.msg.key);
+      if (resp.data.msg.key) Router.push("/");
     } catch (err: any) {
       console.error(err.response.data.msg);
       setError(err.response.data.msg ?? "Oops něco se pokazilo");
@@ -78,5 +80,8 @@ const Login: NextPage = () => {
 };
 
 export default Login;
-
-// alert s chybami a registrace
+export const getServerSideProps = noAuthentication(() => {
+  return {
+    props: {},
+  };
+});

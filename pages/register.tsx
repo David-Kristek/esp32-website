@@ -11,6 +11,8 @@ import Link from "next/link";
 import { useState } from "react";
 import axios from "axios";
 import ReactLoading from "react-loading";
+import { noAuthentication } from "../util/tokens";
+import { Router } from "next/router";
 
 const Login: NextPage = () => {
   const [chip, setChip] = useState("");
@@ -51,7 +53,7 @@ const Login: NextPage = () => {
     if (event.target.password.value !== event.target.repeatpassword.value) {
       setError("Hesla se neshodují");
       setLoading(false);
-      return
+      return;
     }
 
     const { username, password, email } = event.target;
@@ -62,7 +64,7 @@ const Login: NextPage = () => {
         email: email.value,
       });
       console.log(resp.data);
-      // if(resp.data.key)  we are logged hurray
+      if (resp.data.msg.key) Router.push("/");
     } catch (err: any) {
       console.error(err.response.data.msg);
       setError(err.response.data.msg ?? "Oops něco se pokazilo");
@@ -154,3 +156,8 @@ const Login: NextPage = () => {
 };
 
 export default Login;
+export const getServerSideProps = noAuthentication(() => {
+  return {
+    props: {},
+  };
+});

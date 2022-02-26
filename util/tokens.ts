@@ -1,18 +1,17 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { serialize, parse } from "cookie";
-import { NextApiRequest, NextApiResponse } from "next";
+import { setCookie as setCookies } from "nookies";
+import {
+  GetServerSidePropsContext,
+  NextApiRequest,
+  NextApiResponse,
+} from "next";
 import { IncomingMessage } from "http";
 import Chip from "../models/chip";
 import { NextApiRequestCookies } from "next/dist/server/api-utils";
 // You should really not use the fallback and perhaps
 // throw an error if this value is not set!
 const JWT_TOKEN_KEY = process.env.JWT_TOKEN_KEY || "";
-const cookieOptions = {
-  httpOnly: true,
-  path: "/",
-  sameSite: "Strict",
-  secure: process.env.NODE_ENV === "production",
-};
 
 export function setCookie(
   res: any,
@@ -20,8 +19,14 @@ export function setCookie(
   value: string
   //   options: Record<string, unknown> = {}
 ): void {
+  const cookieOptions = {
+    path: "/",
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+  };
   const stringValue = JSON.stringify(value);
-  res.setHeader("Set-Cookie", serialize(name, stringValue), cookieOptions);
+  setCookies({res}, name, stringValue, cookieOptions)
+  // res.setHeader("Set-Cookie", serialize(name, stringValue), cookieOptions);
 }
 
 // This sets the cookie on a NextApiResponse so we can authenticate
@@ -65,4 +70,39 @@ export async function userFromRequest(
   } catch (error) {
     return undefined;
   }
+}
+export function requireAuthentication(gssp: any) {
+  return async (context: GetServerSidePropsContext) => {
+    const { req, res } = context;
+    const auth = await userFromRequest(req);
+    console.log(auth, req.headers);
+
+    if (!auth?.username) {
+      return {
+        redirect: {
+          destination: "/login",
+          statusCode: 302,
+        },
+      };
+    }
+
+    return await gssp(context);
+  };
+}
+export function noAuthentication(gssp: any) {
+  return async (context: GetServerSidePropsContext) => {
+    const { req, res } = context;
+    const auth = await userFromRequest(req);
+
+    if (auth?.username) {
+      return {
+        redirect: {
+          destination: "/",
+          statusCode: 302,
+        },
+      };
+    }
+
+    return await gssp(context);
+  };
 }
