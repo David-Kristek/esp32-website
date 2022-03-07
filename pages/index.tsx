@@ -77,13 +77,14 @@ export default Home;
 
 export const getServerSideProps = requireAuthentication(async (context : any) => {
   const db = await dbConnect();
+  const someData = JSON.stringify({ curTemp: 18 }); 
   const pythonScript = proccess.spawn("python", [
     "util/python/main.py",
-    "Hello Python",
-    "111",
+    someData
   ]);
   pythonScript.stdout.on("data", (data) => {
-    console.log(data.toString());
+    console.log(JSON.parse(data.toString()));
+
   });
   return {
     props: {},

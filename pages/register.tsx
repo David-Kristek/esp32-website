@@ -12,7 +12,7 @@ import { useState } from "react";
 import axios from "axios";
 import ReactLoading from "react-loading";
 import { noAuthentication } from "../util/tokens";
-import { Router } from "next/router";
+import Router from "next/router";
 
 const Login: NextPage = () => {
   const [chip, setChip] = useState("");
@@ -161,3 +161,5 @@ export const getServerSideProps = noAuthentication(() => {
     props: {},
   };
 });
+
+// dalsi dropdown menu, komunikace a socket io, cypress !!

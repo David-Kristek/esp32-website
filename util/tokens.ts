@@ -53,7 +53,6 @@ export async function userFromRequest(
 
   if (!auth) return undefined;
   const token = JSON.parse(auth);
-  console.log(token);
   try {
     // const { chipId } = jwt.verify(token, JWT_TOKEN_KEY) as JwtPayload;
     const { _id } = jwt.verify(token, JWT_TOKEN_KEY) as JwtPayload;
@@ -75,7 +74,6 @@ export function requireAuthentication(gssp: any) {
   return async (context: GetServerSidePropsContext) => {
     const { req, res } = context;
     const auth = await userFromRequest(req);
-    console.log(auth, req.headers);
 
     if (!auth?.username) {
       return {

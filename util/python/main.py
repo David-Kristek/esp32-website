@@ -1,5 +1,14 @@
 import sys
-# print(str(pow(int(sys.argv[2]), int(sys.argv[2]))))
-print(sys.argv[1] )
-number = 2
-num = 2; 
+import json
+
+
+def main(arguments):
+    data = json.loads(arguments)
+    send = {
+        "heating": True,
+        "heatingTemperature": data["curTemp"] + 2
+    }
+    print(json.dumps(send))
+
+
+main(sys.argv[1])

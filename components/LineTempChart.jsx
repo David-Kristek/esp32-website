@@ -24,7 +24,6 @@ export default function LineChart() {
     if (labels.length <= numberOfVisibleLabels) return [];
     for (let i = 0; i < labels.length; i++) {
       if (Math.round(j) === i) {
-        console.log(i);
         continue;
       }
       j += num;
@@ -44,12 +43,11 @@ export default function LineChart() {
     const dataLength = 150;
     const heating = []; 
     for (let i = 0; i < dataLength; i++) {
-      const randomValue = Math.floor(Math.random() * 10) + 15; 
+      const randomValue = Math.floor(Math.random() * 4) + 19; 
       tempValues.push(randomValue);
       labels.push("10:22");
-      heating.push(randomValue > 18 ? undefined : 16); 
+      heating.push(randomValue > 20 ? undefined : 20); 
     }
-    console.log(tempValues);
     hidePoints(tempValues);
     const data = {
       labels: labels,
