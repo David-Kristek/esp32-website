@@ -14,6 +14,9 @@
 
 # production
 /build
+#examples
+/cypress/integration/2-advanced-examples
+/cypress/integration/1-getting-started
 
 # misc
 .DS_Store
