@@ -12,3 +12,6 @@ def main(arguments):
 
 
 main(sys.argv[1])
+
+def handleStuff(): 
+    return false
