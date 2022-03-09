@@ -14,3 +14,5 @@ main(sys.argv[1])
 
 def testFunction(): 
     return True
+def handleStuff(): 
+    return False
