@@ -11,8 +11,3 @@ def main(arguments):
     print(json.dumps(send))
 
 main(sys.argv[1])
-
-def testFunction(): 
-    return True
-def handleStuff(): 
-    return False
