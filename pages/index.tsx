@@ -7,13 +7,24 @@ import dbConnect from "../util/mongodb";
 import * as proccess from "child_process";
 import Box from "../components/Box";
 import LineTempChart from "../components/LineTempChart";
-import { requireAuthentication } from "../util/tokens";
-const Home: NextPage = () => {
+import { requireAuthentication, userFromRequest } from "../util/tokens";
+import { MdOutlineArrowDropDownCircle } from "react-icons/md";
+import axios from "axios";
+import Router from "next/router";
+interface Props {
+  user: any;
+}
+const Home: NextPage = ({ user }) => {
+  // console.log(user);
   const Container = tw.div`
-  bg-verydarkgreen
+  bg-verydarkgreen  
   px-[10vw]
   min-h-[100vh]
 `;
+  const logout = async () => {
+    const resp = await axios.delete("/api/auth");
+    if (resp.data.msg === "success") Router.push("/login");
+  };
 
   return (
     <Container>
@@ -33,8 +44,26 @@ const Home: NextPage = () => {
               className="w-[100px]"
               alt="board"
             />
-            <div className="rounded-xl text-xl border-darkgreen border-2 h-12 p-2 text-lightgreen ">
-              Klakjdl
+            <div
+              id="dropdown"
+              className="relative rounded-xl text-xl border-darkgreen border-2 h-12 p-2 text-lightgreen cursor-pointer group hover:border-lightgreen hover:rounded-b-none transition-all"
+            >
+              <span className="flex gap-x-4 items-center" id="user">
+                {user.username}
+                <MdOutlineArrowDropDownCircle className="text-lightgreen text-xl" />{" "}
+              </span>
+              <ul className="absolute group-hover:block hover:block hidden text-lightgreen  border-2 border-lightgreen mt-2 inset-x-0 text-base">
+                <li className="text-center py-1 pt-2 hover:bg-black">
+                  Nastavní
+                </li>
+                <ul
+                  className="text-center py-1 hover:bg-black"
+                  onClick={logout}
+                  id="logout"
+                >
+                  Odhlásit se
+                </ul>
+              </ul>
             </div>
           </div>
         </header>
@@ -75,18 +104,23 @@ const Home: NextPage = () => {
 
 export default Home;
 
-export const getServerSideProps = requireAuthentication(async (context : any) => {
-  const db = await dbConnect();
-  const someData = JSON.stringify({ curTemp: 18 }); 
-  const pythonScript = proccess.spawn("python", [
-    "util/python/main.py",
-    someData
-  ]);
-  pythonScript.stdout.on("data", (data) => {
-    console.log(JSON.parse(data.toString()));
-
-  });
-  return {
-    props: {},
-  };
-});
+export const getServerSideProps = requireAuthentication(
+  async (context: any) => {
+    const db = await dbConnect();
+    const someData = JSON.stringify({ curTemp: 18 });
+    const pythonScript = proccess.spawn("python", [
+      "util/python/main.py",
+      someData,
+    ]);
+    pythonScript.stdout.on("data", (data) => {
+      console.log(JSON.parse(data.toString()));
+    });
+    const user = await userFromRequest(context.req);
+    console.log(user);
+    return {
+      props: {
+        user,
+      },
+    };
+  }
+);

@@ -44,7 +44,7 @@ const login = async (res: NextApiResponse, body: any, req : NextApiRequest) => {
 
 const logout = (res: NextApiResponse) => {
   clearUser(res);
-  return { status: 200, msg: "User logged out" };
+  return { status: 200, msg: "success" };
 };
 
 // priste cookies, potom register and login in frontend

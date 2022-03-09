@@ -30,6 +30,7 @@ const chipSchema = new Schema({
     type: Date,
     default: Date.now,
   },
+  heatingMode: String,
 });
 
 export default mongoose.models.chips || mongoose.model("chips", chipSchema);

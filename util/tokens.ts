@@ -59,10 +59,12 @@ export async function userFromRequest(
 
     if (!_id) return undefined;
 
-    const chip = await Chip.findOne({ _id });
+    const chip = await Chip.findOne({ _id }).lean();
 
     if (chip) {
       chip.password = "";
+      chip._id = ""; 
+      chip.lastConnection = String(chip.lastConnection); 
       return chip;
     }
     return undefined;
